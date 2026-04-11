@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machinery Impact Analysis Dashboard</title>
+    <meta name="description" content="Professional dashboard analyzing machinery beneficiary survey data — labour reduction, wage savings, income increase, caste & social category distribution.">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ========== CSS RESET & VARIABLES ========== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg-primary: #f0f4f8;
+            --bg-card: #ffffff;
+            --bg-header: linear-gradient(135deg, #1e3a5f 0%, #2d6a9f 50%, #3b82c4 100%);
+            --text-primary: #1a2332;
+            --text-secondary: #5a6a7e;
+            --text-muted: #8896a7;
+            --border-light: #e2e8f0;
+            --accent-blue: #3b82f6;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --accent-indigo: #6366f1;
+            --accent-orange: #f97316;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
+            --shadow-xl: 0 20px 50px -12px rgba(0,0,0,0.12);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: var(--bg-header);
+            padding: 40px 0 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -60%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+        }
+        .header-content {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 0 32px;
+            position: relative;
+            z-index: 1;
+        }
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: 16px;
+            color: rgba(255,255,255,0.75);
+            font-weight: 400;
+            max-width: 600px;
+        }
+        .header-meta {
+            display: flex;
+            gap: 24px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .header-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+        }
+        .header-meta-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.8;
+        }
+
+        /* ========== CONTAINER ========== */
+        .container {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* ========== KPI CARDS ========== */
+        .kpi-section {
+            margin-top: -30px;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 40px;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        .kpi-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-light);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+        .kpi-card:nth-child(1)::before { background: var(--accent-blue); }
+        .kpi-card:nth-child(2)::before { background: var(--accent-emerald); }
+        .kpi-card:nth-child(3)::before { background: var(--accent-purple); }
+        .kpi-card:nth-child(4)::before { background: var(--accent-amber); }
+        .kpi-card:nth-child(5)::before { background: var(--accent-cyan); }
+        .kpi-card:nth-child(6)::before { background: var(--accent-rose); }
+        .kpi-card:nth-child(7)::before { background: var(--accent-indigo); }
+        .kpi-card:nth-child(8)::before { background: var(--accent-orange); }
+
+        .kpi-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 22px;
+        }
+        .kpi-card:nth-child(1) .kpi-icon { background: #eff6ff; }
+        .kpi-card:nth-child(2) .kpi-icon { background: #ecfdf5; }
+        .kpi-card:nth-child(3) .kpi-icon { background: #f5f3ff; }
+        .kpi-card:nth-child(4) .kpi-icon { background: #fffbeb; }
+        .kpi-card:nth-child(5) .kpi-icon { background: #ecfeff; }
+        .kpi-card:nth-child(6) .kpi-icon { background: #fff1f2; }
+        .kpi-card:nth-child(7) .kpi-icon { background: #eef2ff; }
+        .kpi-card:nth-child(8) .kpi-icon { background: #fff7ed; }
+
+        .kpi-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+        .kpi-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        /* ========== SECTION ========== */
+        .section {
+            margin-bottom: 32px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .section-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ========== CHART CARDS ========== */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+            gap: 24px;
+        }
+        .chart-grid.single {
+            grid-template-columns: 1fr;
+        }
+        .chart-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            transition: box-shadow 0.2s ease;
+        }
+        .chart-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        .chart-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .chart-card-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .chart-wrapper canvas {
+            width: 100% !important;
+        }
+        .chart-stat-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .chart-stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 50px;
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            font-size: 13px;
+        }
+        .chart-stat-pill strong {
+            color: var(--text-primary);
+        }
+        .chart-stat-pill span {
+            color: var(--text-muted);
+        }
+
+        /* ========== INSIGHTS CARDS ========== */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        .insight-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .insight-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .insight-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .insight-card:nth-child(1) .insight-icon { background: #eff6ff; }
+        .insight-card:nth-child(2) .insight-icon { background: #ecfdf5; }
+        .insight-card:nth-child(3) .insight-icon { background: #f5f3ff; }
+        .insight-card:nth-child(4) .insight-icon { background: #fffbeb; }
+        .insight-card:nth-child(5) .insight-icon { background: #fff1f2; }
+        .insight-card:nth-child(6) .insight-icon { background: #ecfeff; }
+        .insight-text h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .insight-text p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            text-align: center;
+            padding: 40px 0 32px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 24px; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .chart-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 16px; }
+            .header-content { padding: 0 16px; }
+            .kpi-value { font-size: 22px; }
+        }
+        @media (max-width: 480px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+            .insights-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .kpi-card, .chart-card, .insight-card {
+            animation: fadeUp 0.5s ease forwards;
+            opacity: 0;
+        }
+        .kpi-card:nth-child(1) { animation-delay: 0.05s; }
+        .kpi-card:nth-child(2) { animation-delay: 0.1s; }
+        .kpi-card:nth-child(3) { animation-delay: 0.15s; }
+        .kpi-card:nth-child(4) { animation-delay: 0.2s; }
+        .kpi-card:nth-child(5) { animation-delay: 0.25s; }
+        .kpi-card:nth-child(6) { animation-delay: 0.3s; }
+        .kpi-card:nth-child(7) { animation-delay: 0.35s; }
+        .kpi-card:nth-child(8) { animation-delay: 0.4s; }
+        .chart-card { animation-delay: 0.2s; }
+        .insight-card:nth-child(1) { animation-delay: 0.1s; }
+        .insight-card:nth-child(2) { animation-delay: 0.15s; }
+        .insight-card:nth-child(3) { animation-delay: 0.2s; }
+        .insight-card:nth-child(4) { animation-delay: 0.25s; }
+        .insight-card:nth-child(5) { animation-delay: 0.3s; }
+        .insight-card:nth-child(6) { animation-delay: 0.35s; }
+
+        /* Pie chart container */
+        .pie-container {
+            max-width: 380px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+    <div class="header-content">
+        <div class="header-badge">📊 Survey Analytics</div>
+        <h1>Machinery Impact Analysis </h1>
+        <p>Comprehensive analysis of machinery beneficiary survey responses — measuring impact on labour, wages, and income.</p>
+        <div class="header-meta">
+            <div class="header-meta-item">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Report Generated: April 2026
+            </div>
+            <div class="header-meta-item">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Source: Beneficiary Survey Data
+            </div>
+            <div class="header-meta-item">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                29 Beneficiaries Surveyed
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ===== MAIN CONTAINER ===== -->
+<main class="container">
+
+    <!-- ===== 1. KPI EXECUTIVE SUMMARY ===== -->
+    <section class="kpi-section" id="executive-summary">
+        <div class="kpi-grid" id="kpi-grid">
+            <!-- Filled by JS -->
+        </div>
+    </section>
+
+    <!-- ===== 2. SOCIAL CATEGORY DISTRIBUTION ===== -->
+    <section class="section" id="social-category">
+        <div class="section-header">
+            <div class="section-number">2</div>
+            <h2 class="section-title">Social Category Distribution</h2>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-card-title">Beneficiaries by Social Category</div>
+                <div class="chart-card-subtitle">Breakdown across SC, ST, OBC, and GEN categories</div>
+                <div class="chart-wrapper"><canvas id="chart-social-cat"></canvas></div>
+                <div class="chart-stat-row" id="social-cat-stats"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 3. CASTE DISTRIBUTION ===== -->
+    <section class="section" id="caste-distribution">
+        <div class="section-header">
+            <div class="section-number">3</div>
+            <h2 class="section-title">Caste Distribution</h2>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-card-title">Beneficiaries by Caste</div>
+                <div class="chart-card-subtitle">Distribution of major caste groups among beneficiaries</div>
+                <div class="chart-wrapper"><canvas id="chart-caste"></canvas></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 4. MACHINE TYPE DISTRIBUTION ===== -->
+    <section class="section" id="machine-type">
+        <div class="section-header">
+            <div class="section-number">4</div>
+            <h2 class="section-title">Machine Type Distribution</h2>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-card-title">Beneficiaries by Machine Type</div>
+                <div class="chart-card-subtitle">Number of beneficiaries per machine category</div>
+                <div class="chart-wrapper"><canvas id="chart-machine-type"></canvas></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 5. MACHINE USAGE ANALYSIS ===== -->
+    <section class="section" id="machine-usage">
+        <div class="section-header">
+            <div class="section-number">5</div>
+            <h2 class="section-title">Machine Usage Analysis</h2>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-card-title">Machine Usage Status</div>
+                <div class="chart-card-subtitle">Regular vs Occasional usage among beneficiaries</div>
+                <div class="chart-wrapper pie-container"><canvas id="chart-usage-pie"></canvas></div>
+                <div class="chart-stat-row" id="usage-stats"></div>
+            </div>
+            <!-- ===== 6. USAGE DAYS ===== -->
+            <div class="chart-card">
+                <div class="chart-card-title">Machine Usage Days per Month</div>
+                <div class="chart-card-subtitle">Distribution of monthly usage frequency</div>
+                <div class="chart-wrapper"><canvas id="chart-usage-days"></canvas></div>
+                <div class="chart-stat-row" id="usage-days-stats"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 7. LABOUR REDUCTION ===== -->
+    <section class="section" id="labour-reduction">
+        <div class="section-header">
+            <div class="section-number">7</div>
+            <h2 class="section-title">Labour Reduction Impact</h2>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-card-title">Labour Before vs After Machine</div>
+                <div class="chart-card-subtitle">Comparison of workers needed before and after receiving machinery</div>
+                <div class="chart-wrapper"><canvas id="chart-labour"></canvas></div>
+                <div class="chart-stat-row" id="labour-stats"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 8. WAGE SAVINGS ===== -->
+    <section class="section" id="wage-savings">
+        <div class="section-header">
+            <div class="section-number">8</div>
+            <h2 class="section-title">Wage Savings Analysis</h2>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-card-title">Monthly Wage Savings (₹)</div>
+                <div class="chart-card-subtitle">Per-beneficiary monthly savings from reduced labour costs</div>
+                <div class="chart-wrapper"><canvas id="chart-wage"></canvas></div>
+                <div class="chart-stat-row" id="wage-stats"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 9. INCOME INCREASE ===== -->
+    <section class="section" id="income-increase">
+        <div class="section-header">
+            <div class="section-number">9</div>
+            <h2 class="section-title">Income Increase Analysis</h2>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-card-title">Monthly Income Increase (₹)</div>
+                <div class="chart-card-subtitle">Per-beneficiary monthly income growth post-machinery</div>
+                <div class="chart-wrapper"><canvas id="chart-income"></canvas></div>
+                <div class="chart-stat-row" id="income-stats"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 10. REGIONAL ANALYSIS ===== -->
+    <section class="section" id="regional-analysis">
+        <div class="section-header">
+            <div class="section-number">10</div>
+            <h2 class="section-title">Regional Analysis</h2>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-card-title">Top Villages by Income Increase</div>
+                <div class="chart-card-subtitle">Average monthly income increase per village</div>
+                <div class="chart-wrapper"><canvas id="chart-region-income"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-card-title">Top Villages by Labour Reduction & Wage Savings</div>
+                <div class="chart-card-subtitle">Average labour reduction and wage savings per village</div>
+                <div class="chart-wrapper"><canvas id="chart-region-labour"></canvas></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== INSIGHTS ===== -->
+    <section class="section" id="insights">
+        <div class="section-header">
+            <div class="section-number">💡</div>
+            <h2 class="section-title">Key Insights & Findings</h2>
+        </div>
+        <div class="insights-grid" id="insights-grid">
+            <!-- Filled by JS -->
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>Machinery Impact Analysis Dashboard &bullet; Generated from Beneficiary Survey Data &bullet; April 2026</p>
+</footer>
+
+<script>
+// ========================================================================
+// EMBEDDED DATA — All 29 survey records
+// ========================================================================
+const RAW_DATA = [
+    { name:"Devkaran", hamlet:"Rebariyo ki dhani", village:"Dedpura", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"6–15 दिन", labour_before:"4", labour_after:"2", wage_savings:"12000", income_increase:"12000" },
+    { name:"Bhagirath", hamlet:"Rebariyo ki dhani", village:"Dedpura", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"4", labour_after:"2", wage_savings:"6000", income_increase:"3500" },
+    { name:"Nanuram", hamlet:"Rebariyo ki dhani", village:"Dedpura", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (कभी-कभी)", usage_days:"6–15 दिन", labour_before:"3", labour_after:"1", wage_savings:"2500", income_increase:"3250" },
+    { name:"Narayan", hamlet:"Kesar Colony", village:"Kharwa", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"3", labour_after:"1", wage_savings:"2800", income_increase:"2000" },
+    { name:"Badrilal", hamlet:"Bhil Mohla", village:"Kharwa", social_cat:"ST", caste:"भील", machine_type:"लकड़ी मिस्त्री आरी", using:"हाँ (कभी-कभी)", usage_days:"6–15 दिन", labour_before:"1", labour_after:"1", wage_savings:"1600", income_increase:"6500" },
+    { name:"Badrilal Bhil", hamlet:"Shivnagar", village:"Shivnagar", social_cat:"ST", caste:"भील", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"6–15 दिन", labour_before:"1", labour_after:"", wage_savings:"4500", income_increase:"7000" },
+    { name:"Suresh", hamlet:"Shivpura", village:"Shivpuri", social_cat:"ST", caste:"भील", machine_type:"ग्राइंडर मशीन", using:"हाँ (कभी-कभी)", usage_days:"6–15 दिन", labour_before:"1", labour_after:"", wage_savings:"2000", income_increase:"2000" },
+    { name:"Devkishan", hamlet:"Shivpura", village:"Shivpuri", social_cat:"OBC", caste:"गाड़िया लोहार", machine_type:"इलेक्ट्रॉनिक ब्लोअर फैन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"1", labour_after:"", wage_savings:"4000", income_increase:"3000" },
+    { name:"Ratan", hamlet:"Akrol", village:"Akrol", social_cat:"OBC", caste:"कालबेलिया", machine_type:"तार जाली", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"2", labour_after:"1", wage_savings:"800", income_increase:"1200" },
+    { name:"Suresh Lohar", hamlet:"Kelu", village:"Kelu", social_cat:"OBC", caste:"गाड़िया लोहार", machine_type:"वेल्डिंग मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"1", labour_after:"1", wage_savings:"3600", income_increase:"5800" },
+    { name:"Govind", hamlet:"Kelu", village:"Kelu", social_cat:"ST", caste:"भील", machine_type:"ड्रिल मशीन", using:"हाँ (कभी-कभी)", usage_days:"6–15 दिन", labour_before:"1", labour_after:"1", wage_savings:"1200", income_increase:"2000" },
+    { name:"Mangi Lal", hamlet:"Kushalpura", village:"Kushalpura", social_cat:"OBC", caste:"गाड़िया लोहार", machine_type:"वेल्डिंग मशीन", using:"हाँ (नियमित)", usage_days:"6–15 दिन", labour_before:"2", labour_after:"1", wage_savings:"7000", income_increase:"4500" },
+    { name:"Babulal", hamlet:"Kushalpura", village:"Kushalpura", social_cat:"OBC", caste:"गाड़िया लोहार", machine_type:"इलेक्ट्रॉनिक ब्लोअर फैन", using:"हाँ (नियमित)", usage_days:"6–15 दिन", labour_before:"2", labour_after:"1", wage_savings:"6000", income_increase:"5000" },
+    { name:"Manohar", hamlet:"Meriya Mangari", village:"Kharwa", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"4", labour_after:"2", wage_savings:"3600", income_increase:"3600" },
+    { name:"Mohan", hamlet:"Meriya Mangari", village:"Kharwa", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"4", labour_after:"2", wage_savings:"3500", income_increase:"3000" },
+    { name:"Ramdeen", hamlet:"Akrol", village:"Akrol", social_cat:"OBC", caste:"गाड़िया लोहार", machine_type:"वेल्डिंग मशीन, ग्राइंडर मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"2", labour_after:"1", wage_savings:"1500", income_increase:"2000" },
+    { name:"Govind", hamlet:"Kesar Colony", village:"Kharwa", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"5 से अधिक", labour_after:"3", wage_savings:"4000", income_increase:"4000" },
+    { name:"Ratan Lohar", hamlet:"Lohar Basti", village:"Piplaz", social_cat:"OBC", caste:"गाड़िया लोहार", machine_type:"इलेक्ट्रॉनिक ब्लोअर फैन, ड्रिल मशीन", using:"हाँ (नियमित)", usage_days:"6–15 दिन", labour_before:"2", labour_after:"1", wage_savings:"1500", income_increase:"2000" },
+    { name:"Mangi Lal", hamlet:"Kesar Colony", village:"Kharwa", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"3", labour_after:"2", wage_savings:"3000", income_increase:"3000" },
+    { name:"Bheem", hamlet:"Lohar Basti", village:"Piplaz", social_cat:"OBC", caste:"कालबेलिया", machine_type:"इलेक्ट्रॉनिक ब्लोअर फैन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"2", labour_after:"1", wage_savings:"1000", income_increase:"2000" },
+    { name:"Karam Chand", hamlet:"Kirap", village:"Kirap", social_cat:"ST", caste:"भील", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"6–15 दिन", labour_before:"2", labour_after:"1", wage_savings:"10000", income_increase:"20000" },
+    { name:"Jagdish", hamlet:"Shyopura", village:"Shyopura", social_cat:"OBC", caste:"गाड़िया लोहार", machine_type:"हथौड़ा, घंटा/फोर्जिंग ब्लॉक, ग्राइंडर", using:"हाँ (नियमित)", usage_days:"6–15 दिन", labour_before:"3", labour_after:"1", wage_savings:"1000", income_increase:"817" },
+    { name:"Bhura", hamlet:"Andheri Devri", village:"Andvri", social_cat:"SC", caste:"हरिजन", machine_type:"वजन मापने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"1", labour_after:"1", wage_savings:"2000", income_increase:"2000" },
+    { name:"Suresh Nayak", hamlet:"Nadi Ruparel", village:"Ruparel", social_cat:"SC", caste:"नायक", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"3", labour_after:"2", wage_savings:"3500", income_increase:"3500" },
+    { name:"Manoj", hamlet:"Kesar Colony", village:"Kharwa", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"3", labour_after:"2", wage_savings:"3000", income_increase:"3000" },
+    { name:"Ramlal", hamlet:"Kirap", village:"Kirap", social_cat:"OBC", caste:"गाड़िया लोहार", machine_type:"इलेक्ट्रॉनिक ब्लोअर फैन, ग्राइंडर मशीन", using:"हाँ (नियमित)", usage_days:"6–15 दिन", labour_before:"2", labour_after:"1", wage_savings:"6000", income_increase:"8000" },
+    { name:"Prakash Nath", hamlet:"Surajpura II", village:"Surajpura II", social_cat:"OBC", caste:"कालबेलिया", machine_type:"लकड़ी काटने की मशीन", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"2", labour_after:"0", wage_savings:"3000", income_increase:"3000" },
+    { name:"Shankar", hamlet:"Amarpura", village:"Surajpura II", social_cat:"OBC", caste:"गाड़िया लोहार", machine_type:"हथौड़ा, घंटा/फोर्जिंग ब्लॉक, ग्राइंडर", using:"हाँ (नियमित)", usage_days:"16–30 दिन", labour_before:"1", labour_after:"0", wage_savings:"2000", income_increase:"3000" },
+    { name:"Dayal Nath", hamlet:"Devipura", village:"Devipura", social_cat:"OBC", caste:"कालबेलिया", machine_type:"वजन मापने की मशीन", using:"हाँ (नियमित)", usage_days:"6–15 दिन", labour_before:"1", labour_after:"0", wage_savings:"1166", income_increase:"1166" }
+];
+
+// ========================================================================
+// CASTE NAME TRANSLITERATION — Hindi → Hinglish
+// ========================================================================
+const CASTE_MAP = {
+    'कालबेलिया': 'Kalbelia',
+    'गाड़िया लोहार': 'Gadiya Lohar',
+    'भील': 'Bhil',
+    'हरिजन': 'Harijan',
+    'नायक': 'Nayak',
+};
+RAW_DATA.forEach(d => {
+    d.caste = CASTE_MAP[d.caste] || d.caste;
+});
+
+// ========================================================================
+// HELPERS
+// ========================================================================
+function parseNum(val) {
+    if (!val || val === '' || val === 'None') return null;
+    const s = val.replace(/[^\d.]/g, '');
+    const n = parseFloat(s);
+    return isNaN(n) ? null : n;
+}
+
+function parseLabourBefore(val) {
+    if (!val) return null;
+    if (val.includes('अधिक') || val.includes('5')) return 6; // "5 से अधिक" → 6
+    return parseNum(val);
+}
+
+function avg(arr) {
+    const valid = arr.filter(v => v !== null && v !== undefined);
+    if (valid.length === 0) return 0;
+    return valid.reduce((a, b) => a + b, 0) / valid.length;
+}
+
+function sum(arr) {
+    return arr.filter(v => v !== null && v !== undefined).reduce((a, b) => a + b, 0);
+}
+
+function countBy(arr, key) {
+    const map = {};
+    arr.forEach(item => {
+        const k = item[key] || 'Unknown';
+        map[k] = (map[k] || 0) + 1;
+    });
+    return map;
+}
+
+function fmt(n) { return n.toLocaleString('en-IN'); }
+function fmtDec(n) { return n.toFixed(1); }
+
+// ========================================================================
+// CHART GLOBAL CONFIG
+// ========================================================================
+Chart.register(ChartDataLabels);
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#5a6a7e';
+Chart.defaults.plugins.legend.display = false;
+
+const COLORS = {
+    blue: '#3b82f6',
+    blueLight: 'rgba(59,130,246,0.15)',
+    emerald: '#10b981',
+    emeraldLight: 'rgba(16,185,129,0.15)',
+    amber: '#f59e0b',
+    amberLight: 'rgba(245,158,11,0.15)',
+    rose: '#f43f5e',
+    roseLight: 'rgba(244,63,94,0.15)',
+    purple: '#8b5cf6',
+    purpleLight: 'rgba(139,92,246,0.15)',
+    cyan: '#06b6d4',
+    cyanLight: 'rgba(6,182,212,0.15)',
+    indigo: '#6366f1',
+    orange: '#f97316',
+    slate: '#64748b',
+    palette: ['#3b82f6','#10b981','#f59e0b','#f43f5e','#8b5cf6','#06b6d4','#6366f1','#f97316','#ec4899','#14b8a6','#a855f7','#84cc16'],
+    paletteBg: ['rgba(59,130,246,0.8)','rgba(16,185,129,0.8)','rgba(245,158,11,0.8)','rgba(244,63,94,0.8)','rgba(139,92,246,0.8)','rgba(6,182,212,0.8)','rgba(99,102,241,0.8)','rgba(249,115,22,0.8)','rgba(236,72,153,0.8)','rgba(20,184,166,0.8)','rgba(168,85,247,0.8)','rgba(132,204,22,0.8)']
+};
+
+function barDefaults(ctx, labels, values, color, horizontal = false) {
+    return {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: color || COLORS.paletteBg,
+                borderRadius: 6,
+                borderSkipped: false,
+                barPercentage: 0.65,
+                categoryPercentage: 0.75,
+            }]
+        },
+        options: {
+            indexAxis: horizontal ? 'y' : 'x',
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: horizontal ? (labels.length > 6 ? 1.2 : 1.6) : 2,
+            layout: { padding: { top: horizontal ? 0 : 24 } },
+            scales: {
+                x: {
+                    grid: { display: !horizontal, color: 'rgba(0,0,0,0.04)' },
+                    border: { display: false },
+                    ticks: { font: { size: 11 } }
+                },
+                y: {
+                    grid: { display: horizontal, color: 'rgba(0,0,0,0.04)' },
+                    border: { display: false },
+                    beginAtZero: true,
+                    ticks: { font: { size: 11 } }
+                }
+            },
+            plugins: {
+                datalabels: {
+                    anchor: horizontal ? 'end' : 'end',
+                    align: horizontal ? 'right' : 'top',
+                    font: { weight: '600', size: 12 },
+                    color: '#1a2332',
+                    formatter: (v) => typeof v === 'number' && v % 1 !== 0 ? v.toFixed(1) : v
+                },
+                tooltip: {
+                    backgroundColor: '#1a2332',
+                    titleFont: { size: 13, weight: '600' },
+                    bodyFont: { size: 12 },
+                    padding: 12,
+                    cornerRadius: 8,
+                }
+            }
+        }
+    };
+}
+
+// ========================================================================
+// COMPUTE STATS
+// ========================================================================
+const totalBeneficiaries = RAW_DATA.length;
+const villages = [...new Set(RAW_DATA.map(d => d.village))];
+const hamlets = [...new Set(RAW_DATA.map(d => d.hamlet))];
+
+// Normalize machine types — extract primary machine
+function primaryMachine(mt) {
+    const m = mt.trim();
+    if (m.includes('लकड़ी काटने')) return 'Lakdi Katne Ki Machine';
+    if (m.includes('लकड़ी मिस्त्री')) return 'Lakdi Mistri Aari';
+    if (m.includes('वेल्डिंग')) return 'Welding Machine';
+    if (m.includes('ब्लोअर') || m.includes('ब्लोवर')) return 'Electronic Blower Fan';
+    if (m.includes('ग्राइंडर') && !m.includes('वेल्डिंग') && !m.includes('ब्लोअर') && !m.includes('हथौड़ा')) return 'Grinder Machine';
+    if (m.includes('ड्रिल') && !m.includes('ब्लोअर')) return 'Drill Machine';
+    if (m.includes('हथौड़ा')) return 'Hathoda / Forging Set';
+    if (m.includes('वजन')) return 'Wajan Maapne Ki Machine';
+    if (m.includes('तार')) return 'Tar Jali Machine';
+    return m.substring(0, 30);
+}
+
+const machineTypes = [...new Set(RAW_DATA.map(d => primaryMachine(d.machine_type)))];
+
+const labourBeforeArr = RAW_DATA.map(d => parseLabourBefore(d.labour_before));
+const labourAfterArr = RAW_DATA.map(d => parseNum(d.labour_after));
+const wageSavingsArr = RAW_DATA.map(d => parseNum(d.wage_savings));
+const incomeIncreaseArr = RAW_DATA.map(d => parseNum(d.income_increase));
+
+const validLabourPairs = RAW_DATA.map((d, i) => ({
+    before: parseLabourBefore(d.labour_before),
+    after: parseNum(d.labour_after)
+})).filter(p => p.before !== null && p.after !== null);
+
+const avgLabourReduction = validLabourPairs.length > 0
+    ? validLabourPairs.reduce((s, p) => s + (p.before - p.after), 0) / validLabourPairs.length
+    : 0;
+
+const avgWageSavings = avg(wageSavingsArr);
+const avgIncomeIncrease = avg(incomeIncreaseArr);
+
+// Usage days
+function usageDaysMid(val) {
+    if (!val) return null;
+    if (val.includes('1–5') || val.includes('1-5')) return 3;
+    if (val.includes('6–15') || val.includes('6-15')) return 10;
+    if (val.includes('16–30') || val.includes('16-30')) return 23;
+    return null;
+}
+const usageDaysArr = RAW_DATA.map(d => usageDaysMid(d.usage_days));
+const avgUsageDays = avg(usageDaysArr);
+
+// ========================================================================
+// 1. KPI CARDS
+// ========================================================================
+const kpiData = [
+    { icon: '👥', label: 'Total Beneficiaries', value: totalBeneficiaries, sub: 'Surveyed' },
+    { icon: '🏘️', label: 'Villages Covered', value: villages.length, sub: `${hamlets.length} Hamlets` },
+    { icon: '⚙️', label: 'Machine Types', value: 11, sub: 'Unique categories' },
+    { icon: '📅', label: 'Avg Usage Days/Month', value: fmtDec(avgUsageDays), sub: 'days per month' },
+    { icon: '👷', label: 'Avg Labour Reduction', value: fmtDec(avgLabourReduction), sub: 'workers per household' },
+    { icon: '💰', label: 'Avg Monthly Wage Savings', value: '₹' + fmt(Math.round(avgWageSavings)), sub: 'per beneficiary' },
+    { icon: '📈', label: 'Avg Monthly Income Increase', value: '₹' + fmt(Math.round(avgIncomeIncrease)), sub: 'per beneficiary' },
+    { icon: '✅', label: 'Machine Usage Rate', value: '100%', sub: 'All using machines' },
+];
+
+const kpiGrid = document.getElementById('kpi-grid');
+kpiData.forEach(k => {
+    kpiGrid.innerHTML += `
+        <div class="kpi-card">
+            <div class="kpi-icon">${k.icon}</div>
+            <div class="kpi-label">${k.label}</div>
+            <div class="kpi-value">${k.value}</div>
+            <div class="kpi-sub">${k.sub}</div>
+        </div>`;
+});
+
+// ========================================================================
+// 2. SOCIAL CATEGORY BAR CHART
+// ========================================================================
+const socialCatCounts = countBy(RAW_DATA, 'social_cat');
+const catOrder = ['OBC', 'ST', 'SC', 'GEN'];
+const catLabels = catOrder.filter(c => socialCatCounts[c]);
+const catValues = catLabels.map(c => socialCatCounts[c] || 0);
+const catColors = [COLORS.paletteBg[0], COLORS.paletteBg[1], COLORS.paletteBg[2], COLORS.paletteBg[3]];
+
+new Chart(document.getElementById('chart-social-cat'), barDefaults(null, catLabels, catValues, catColors));
+
+document.getElementById('social-cat-stats').innerHTML = catLabels.map((c, i) =>
+    `<div class="chart-stat-pill"><strong>${catValues[i]}</strong> <span>${c} (${((catValues[i]/totalBeneficiaries)*100).toFixed(0)}%)</span></div>`
+).join('');
+
+// ========================================================================
+// 3. CASTE HORIZONTAL BAR CHART
+// ========================================================================
+const casteCounts = countBy(RAW_DATA, 'caste');
+const casteSorted = Object.entries(casteCounts).sort((a, b) => b[1] - a[1]);
+const casteLabels = casteSorted.map(e => e[0]);
+const casteValues = casteSorted.map(e => e[1]);
+
+new Chart(document.getElementById('chart-caste'), barDefaults(null, casteLabels, casteValues, COLORS.paletteBg.slice(0, casteLabels.length), true));
+
+// ========================================================================
+// 4. MACHINE TYPE BAR CHART
+// ========================================================================
+const machineCountMap = {};
+RAW_DATA.forEach(d => {
+    const pm = primaryMachine(d.machine_type);
+    machineCountMap[pm] = (machineCountMap[pm] || 0) + 1;
+});
+const machineSorted = Object.entries(machineCountMap).sort((a, b) => b[1] - a[1]);
+const machineLabels = machineSorted.map(e => e[0]);
+const machineValues = machineSorted.map(e => e[1]);
+
+new Chart(document.getElementById('chart-machine-type'), barDefaults(null, machineLabels, machineValues, COLORS.paletteBg.slice(0, machineLabels.length), true));
+
+// ========================================================================
+// 5. MACHINE USAGE PIE CHART
+// ========================================================================
+const usageRegular = RAW_DATA.filter(d => d.using.includes('नियमित')).length;
+const usageOccasional = RAW_DATA.filter(d => d.using.includes('कभी-कभी')).length;
+const usageNo = RAW_DATA.filter(d => d.using.includes('नहीं')).length;
+
+new Chart(document.getElementById('chart-usage-pie'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Regular ', 'Occasional ', 'Not Using'],
+        datasets: [{
+            data: [usageRegular, usageOccasional, usageNo],
+            backgroundColor: [COLORS.paletteBg[1], COLORS.paletteBg[2], COLORS.paletteBg[3]],
+            borderWidth: 3,
+            borderColor: '#ffffff',
+            hoverOffset: 8,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        cutout: '55%',
+        plugins: {
+            legend: { display: true, position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 12 } } },
+            datalabels: {
+                color: '#fff',
+                font: { weight: '700', size: 15 },
+                formatter: (v, ctx) => v > 0 ? v : ''
+            }
+        }
+    }
+});
+
+document.getElementById('usage-stats').innerHTML = `
+    <div class="chart-stat-pill"><strong>${usageRegular}</strong> <span>Regular users (${((usageRegular/totalBeneficiaries)*100).toFixed(0)}%)</span></div>
+    <div class="chart-stat-pill"><strong>${usageOccasional}</strong> <span>Occasional users (${((usageOccasional/totalBeneficiaries)*100).toFixed(0)}%)</span></div>
+    ${usageNo > 0 ? `<div class="chart-stat-pill"><strong>${usageNo}</strong> <span>Not using</span></div>` : ''}
+`;
+
+// ========================================================================
+// 6. USAGE DAYS BAR CHART
+// ========================================================================
+const daysBuckets = { '1–5 days': 0, '6–15 days': 0, '16–30 days': 0 };
+RAW_DATA.forEach(d => {
+    if (d.usage_days.includes('1–5') || d.usage_days.includes('1-5')) daysBuckets['1–5 days']++;
+    else if (d.usage_days.includes('6–15') || d.usage_days.includes('6-15')) daysBuckets['6–15 days']++;
+    else if (d.usage_days.includes('16–30') || d.usage_days.includes('16-30')) daysBuckets['16–30 days']++;
+});
+const daysLabels = Object.keys(daysBuckets);
+const daysValues = Object.values(daysBuckets);
+
+new Chart(document.getElementById('chart-usage-days'), barDefaults(null, daysLabels, daysValues, [COLORS.paletteBg[4], COLORS.paletteBg[0], COLORS.paletteBg[1]]));
+
+document.getElementById('usage-days-stats').innerHTML = `
+    <div class="chart-stat-pill"><strong>${fmtDec(avgUsageDays)}</strong> <span>Avg days/month</span></div>
+`;
+
+// ========================================================================
+// 7. LABOUR REDUCTION — GROUPED BAR CHART
+// ========================================================================
+const labourChartData = validLabourPairs.map((p, i) => ({
+    name: RAW_DATA.filter((d, j) => parseLabourBefore(d.labour_before) !== null && parseNum(d.labour_after) !== null)[i]?.name || `B${i+1}`,
+    before: p.before,
+    after: p.after
+}));
+
+new Chart(document.getElementById('chart-labour'), {
+    type: 'bar',
+    data: {
+        labels: labourChartData.map(d => d.name),
+        datasets: [
+            {
+                label: 'Before Machine',
+                data: labourChartData.map(d => d.before),
+                backgroundColor: 'rgba(244,63,94,0.7)',
+                borderRadius: 4,
+                barPercentage: 0.6,
+            },
+            {
+                label: 'After Machine',
+                data: labourChartData.map(d => d.after),
+                backgroundColor: 'rgba(16,185,129,0.7)',
+                borderRadius: 4,
+                barPercentage: 0.6,
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 2.2,
+        scales: {
+            x: { grid: { display: false }, border: { display: false }, ticks: { font: { size: 10 }, maxRotation: 45 } },
+            y: { grid: { color: 'rgba(0,0,0,0.04)' }, border: { display: false }, beginAtZero: true, title: { display: true, text: 'Number of Workers', font: { size: 12 } } }
+        },
+        plugins: {
+            legend: { display: true, position: 'top', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 12 } } },
+            datalabels: {
+                anchor: 'end', align: 'top',
+                font: { weight: '600', size: 10 },
+                color: '#1a2332',
+            },
+            tooltip: { backgroundColor: '#1a2332', padding: 12, cornerRadius: 8 }
+        }
+    }
+});
+
+const totalLabourBefore = validLabourPairs.reduce((s, p) => s + p.before, 0);
+const totalLabourAfter = validLabourPairs.reduce((s, p) => s + p.after, 0);
+document.getElementById('labour-stats').innerHTML = `
+    <div class="chart-stat-pill"><strong>${totalLabourBefore}</strong> <span>Total workers before</span></div>
+    <div class="chart-stat-pill"><strong>${totalLabourAfter}</strong> <span>Total workers after</span></div>
+    <div class="chart-stat-pill"><strong>${fmtDec(avgLabourReduction)}</strong> <span>Avg reduction/household</span></div>
+    <div class="chart-stat-pill"><strong>${((1 - totalLabourAfter/totalLabourBefore)*100).toFixed(0)}%</strong> <span>Overall reduction</span></div>
+`;
+
+// ========================================================================
+// 8. WAGE SAVINGS BAR CHART
+// ========================================================================
+const wageData = RAW_DATA.map(d => ({ name: d.name, val: parseNum(d.wage_savings) })).filter(d => d.val !== null).sort((a, b) => b.val - a.val);
+
+new Chart(document.getElementById('chart-wage'), barDefaults(null, wageData.map(d => d.name), wageData.map(d => d.val), COLORS.paletteBg[0], true));
+
+document.getElementById('wage-stats').innerHTML = `
+    <div class="chart-stat-pill"><strong>₹${fmt(Math.round(avgWageSavings))}</strong> <span>Average savings</span></div>
+`;
+
+// ========================================================================
+// 9. INCOME INCREASE BAR CHART
+// ========================================================================
+const incomeData = RAW_DATA.map(d => ({ name: d.name, val: parseNum(d.income_increase) })).filter(d => d.val !== null).sort((a, b) => b.val - a.val);
+
+new Chart(document.getElementById('chart-income'), barDefaults(null, incomeData.map(d => d.name), incomeData.map(d => d.val), COLORS.paletteBg[1], true));
+
+document.getElementById('income-stats').innerHTML = `
+    <div class="chart-stat-pill"><strong>₹${fmt(Math.round(avgIncomeIncrease))}</strong> <span>Average increase</span></div>
+    
+`;
+
+// ========================================================================
+// 10. REGIONAL ANALYSIS
+// ========================================================================
+// Avg income increase by village
+const villageIncomeMap = {};
+const villageWageMap = {};
+const villageLabourMap = {};
+RAW_DATA.forEach(d => {
+    const v = d.village;
+    const inc = parseNum(d.income_increase);
+    const wage = parseNum(d.wage_savings);
+    const lb = parseLabourBefore(d.labour_before);
+    const la = parseNum(d.labour_after);
+    if (!villageIncomeMap[v]) villageIncomeMap[v] = [];
+    if (!villageWageMap[v]) villageWageMap[v] = [];
+    if (!villageLabourMap[v]) villageLabourMap[v] = [];
+    if (inc !== null) villageIncomeMap[v].push(inc);
+    if (wage !== null) villageWageMap[v].push(wage);
+    if (lb !== null && la !== null) villageLabourMap[v].push(lb - la);
+});
+
+const villageIncomeAvg = Object.entries(villageIncomeMap).map(([v, arr]) => ({ village: v, avg: avg(arr) })).sort((a, b) => b.avg - a.avg);
+
+new Chart(document.getElementById('chart-region-income'), barDefaults(null, villageIncomeAvg.map(d => d.village), villageIncomeAvg.map(d => Math.round(d.avg)), COLORS.paletteBg.slice(0, villageIncomeAvg.length)));
+
+// Wage savings + Labour reduction by village (grouped)
+const villageKeys = Object.keys(villageWageMap).sort((a, b) => avg(villageWageMap[b]) - avg(villageWageMap[a]));
+
+new Chart(document.getElementById('chart-region-labour'), {
+    type: 'bar',
+    data: {
+        labels: villageKeys,
+        datasets: [
+            {
+                label: 'Avg Wage Savings (₹)',
+                data: villageKeys.map(v => Math.round(avg(villageWageMap[v]))),
+                backgroundColor: 'rgba(59,130,246,0.7)',
+                borderRadius: 4, barPercentage: 0.6,
+                yAxisID: 'y',
+            },
+            {
+                label: 'Avg Labour Reduction',
+                data: villageKeys.map(v => villageLabourMap[v].length > 0 ? parseFloat(avg(villageLabourMap[v]).toFixed(1)) : 0),
+                backgroundColor: 'rgba(245,158,11,0.7)',
+                borderRadius: 4, barPercentage: 0.6,
+                yAxisID: 'y1',
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1.8,
+        scales: {
+            x: { grid: { display: false }, border: { display: false }, ticks: { font: { size: 10 }, maxRotation: 45 } },
+            y: { type: 'linear', position: 'left', grid: { color: 'rgba(0,0,0,0.04)' }, border: { display: false }, beginAtZero: true, title: { display: true, text: 'Wage Savings (₹)', font: { size: 11 } } },
+            y1: { type: 'linear', position: 'right', grid: { display: false }, border: { display: false }, beginAtZero: true, title: { display: true, text: 'Labour Reduction', font: { size: 11 } } }
+        },
+        plugins: {
+            legend: { display: true, position: 'top', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 12 } } },
+            datalabels: { display: false },
+            tooltip: { backgroundColor: '#1a2332', padding: 12, cornerRadius: 8 }
+        }
+    }
+});
+
+// ========================================================================
+// INSIGHTS
+// ========================================================================
+// Most benefited caste
+const casteWage = {};
+const casteIncome = {};
+RAW_DATA.forEach(d => {
+    const c = d.caste;
+    const w = parseNum(d.wage_savings);
+    const inc = parseNum(d.income_increase);
+    if (!casteWage[c]) casteWage[c] = [];
+    if (!casteIncome[c]) casteIncome[c] = [];
+    if (w !== null) casteWage[c].push(w);
+    if (inc !== null) casteIncome[c].push(inc);
+});
+const topCasteByIncome = Object.entries(casteIncome).map(([c, arr]) => ({ caste: c, avg: avg(arr) })).sort((a, b) => b.avg - a.avg)[0];
+const topCasteByWage = Object.entries(casteWage).map(([c, arr]) => ({ caste: c, avg: avg(arr) })).sort((a, b) => b.avg - a.avg)[0];
+
+// Most used machine
+const topMachine = machineSorted[0];
+
+const insightsHTML = [
+    { icon: '🏆', title: 'Most Benefited Caste (Income)', text: `${topCasteByIncome.caste} group saw the highest average income increase of ₹${fmt(Math.round(topCasteByIncome.avg))}/month.` },
+    { icon: '💰', title: 'Top Caste by Wage Savings', text: `${topCasteByWage.caste} group achieved highest average wage savings of ₹${fmt(Math.round(topCasteByWage.avg))}/month.` },
+    { icon: '⚙️', title: 'Most Popular Machine', text: `${topMachine[0]} is the most distributed machine with ${topMachine[1]} beneficiaries (${((topMachine[1]/totalBeneficiaries)*100).toFixed(0)}%).` },
+    { icon: '👷', title: 'Labour Reduction Impact', text: `Average reduction of ${fmtDec(avgLabourReduction)} workers per household, with overall ${((1 - totalLabourAfter/totalLabourBefore)*100).toFixed(0)}% reduction in labour dependency.` },
+    { icon: '📊', title: 'Usage Pattern', text: `${usageRegular} out of ${totalBeneficiaries} beneficiaries (${((usageRegular/totalBeneficiaries)*100).toFixed(0)}%) use machines regularly. Average usage is ${fmtDec(avgUsageDays)} days/month.` },
+];
+
+const insightsGrid = document.getElementById('insights-grid');
+insightsHTML.forEach(ins => {
+    insightsGrid.innerHTML += `
+        <div class="insight-card">
+            <div class="insight-icon">${ins.icon}</div>
+            <div class="insight-text">
+                <h4>${ins.title}</h4>
+                <p>${ins.text}</p>
+            </div>
+        </div>`;
+});
+</script>
+</body>
+</html>
