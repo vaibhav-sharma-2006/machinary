@@ -1,484 +1,1351 @@
-Viewed machinery_dashboard.html:1-474
-
-Here is the complete HTML code for your **Machinery Impact Analysis Dashboard**. 
-
-The file is already generated and saved on your computer at:
-[C:\Users\ts041\Desktop\ffoo\machinery_dashboard.html](cci:7://file:///c:/Users/ts041/Desktop/ffoo/machinery_dashboard.html:0:0-0:0)
-
-However, if you need to copy it directly from here, here is the full HTML file:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Machinery Impact Analysis Dashboard</title>
-    <!-- Chart.js and DataLabels via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-    
-    <style>
-        :root {
-            --bg-color: #f4f7fa;
-            --card-bg: #ffffff;
-            --text-main: #334155;
-            --text-muted: #64748b;
-            --primary: #3b82f6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --border-radius: 16px;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: var(--font-family);
-        }
-        
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 24px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 32px;
-            padding: 24px;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-        
-        header h1 { margin-bottom: 8px; font-size: 2.2rem; }
-        header p { opacity: 0.9; font-size: 1.1rem; }
-        
-        /* Executive Summary Grid */
-        .exec-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-        
-        .stat-card {
-            background: var(--card-bg);
-            padding: 24px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            border-left: 5px solid var(--primary);
-            transition: transform 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .stat-card:hover { transform: translateY(-3px); }
-        .stat-card.success { border-left-color: var(--success); }
-        .stat-card.warning { border-left-color: var(--warning); }
-        .stat-card.danger { border-left-color: var(--danger); }
-        
-        .stat-title {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machinery Impact Analysis Dashboard</title>
+<meta name="description" content="Comprehensive machinery impact analysis dashboard showing usage behavior, economic impact, productivity improvement and beneficiary feedback from the machinery distribution program.">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #f0f4f8;
+    --bg-card: #ffffff;
+    --bg-header: linear-gradient(135deg, #1a365d 0%, #2c5282 40%, #2b6cb0 100%);
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --border-light: #e2e8f0;
+    --accent-blue: #3182ce;
+    --accent-green: #38a169;
+    --accent-orange: #dd6b20;
+    --accent-purple: #805ad5;
+    --accent-teal: #319795;
+    --accent-pink: #d53f8c;
+    --accent-red: #e53e3e;
+    --accent-yellow: #d69e2e;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.05);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
 
-        /* Insights Banner */
-        .insights-banner {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-bottom: 32px;
-            box-shadow: var(--shadow);
-            border: 1px solid #e2e8f0;
-        }
-        .insights-banner .insight-item {
-            flex: 1;
-            min-width: 180px;
-            text-align: center;
-        }
-        .insight-icon { font-size: 1.5rem; margin-bottom: 5px; }
-        .insight-value { font-weight: bold; font-size: 1.2rem; color: var(--primary); }
-        .insight-label { font-size: 0.85rem; color: var(--text-muted); }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Charts Grid */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-        }
-        
-        .chart-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            height: 400px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .chart-header {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .chart-container {
-            flex: 1;
-            position: relative;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        canvas { width: 100% !important; height: 100% !important; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
 
-        @media (max-width: 768px) {
-            .charts-grid { grid-template-columns: 1fr; }
-            .chart-card { height: 350px; }
-        }
-    </style>
+  /* Header */
+  .dashboard-header {
+    background: var(--bg-header);
+    color: white;
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .dashboard-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .dashboard-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: 10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-content {
+    max-width: 1360px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .header-title {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    line-height: 1.15;
+  }
+  .header-subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    opacity: 0.85;
+    max-width: 600px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .header-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    opacity: 0.8;
+    font-weight: 400;
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 32px 40px 60px;
+  }
+
+  /* Section Titles */
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 40px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.3px;
+  }
+  .section-title .emoji {
+    font-size: 24px;
+  }
+  .section-divider {
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-blue), transparent);
+    border-radius: 2px;
+    margin-bottom: 24px;
+  }
+
+  /* KPI Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 12px;
+  }
+  .kpi-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+  .kpi-card:nth-child(1)::before { background: linear-gradient(90deg, #3182ce, #63b3ed); }
+  .kpi-card:nth-child(2)::before { background: linear-gradient(90deg, #38a169, #68d391); }
+  .kpi-card:nth-child(3)::before { background: linear-gradient(90deg, #805ad5, #b794f4); }
+  .kpi-card:nth-child(4)::before { background: linear-gradient(90deg, #dd6b20, #f6ad55); }
+  .kpi-card:nth-child(5)::before { background: linear-gradient(90deg, #319795, #4fd1c5); }
+  .kpi-card:nth-child(6)::before { background: linear-gradient(90deg, #d53f8c, #f687b3); }
+  .kpi-card:nth-child(7)::before { background: linear-gradient(90deg, #e53e3e, #fc8181); }
+  .kpi-card:nth-child(8)::before { background: linear-gradient(90deg, #d69e2e, #f6e05e); }
+  .kpi-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  .kpi-value {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .kpi-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  /* Chart Grid */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .chart-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .chart-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  .chart-card.full-width {
+    grid-column: 1 / -1;
+  }
+  .chart-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .chart-header-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .chart-header-icon.blue { background: #ebf8ff; }
+  .chart-header-icon.green { background: #f0fff4; }
+  .chart-header-icon.purple { background: #faf5ff; }
+  .chart-header-icon.orange { background: #fffaf0; }
+  .chart-header-icon.teal { background: #e6fffa; }
+  .chart-header-icon.pink { background: #fff5f7; }
+  .chart-header-icon.red { background: #fff5f5; }
+  .chart-header-icon.yellow { background: #fffff0; }
+  .chart-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .chart-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .chart-container {
+    position: relative;
+    width: 100%;
+  }
+  .chart-container.bar-chart { height: 320px; }
+  .chart-container.pie-chart { height: 300px; }
+  .chart-container.horizontal-bar { height: 280px; }
+  .chart-container canvas { max-width: 100%; }
+
+  /* Insights Section */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .insight-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    border-left: 4px solid;
+    transition: transform 0.2s ease;
+  }
+  .insight-card:hover { transform: translateY(-2px); }
+  .insight-card:nth-child(1) { border-left-color: var(--accent-blue); }
+  .insight-card:nth-child(2) { border-left-color: var(--accent-green); }
+  .insight-card:nth-child(3) { border-left-color: var(--accent-purple); }
+  .insight-card:nth-child(4) { border-left-color: var(--accent-orange); }
+  .insight-card:nth-child(5) { border-left-color: var(--accent-teal); }
+  .insight-card:nth-child(6) { border-left-color: var(--accent-pink); }
+  .insight-icon {
+    font-size: 26px;
+    margin-bottom: 10px;
+  }
+  .insight-title {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 4px;
+  }
+  .insight-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  .insight-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+  }
+
+  /* Summary Stats Row */
+  .summary-stat-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .summary-stat-pill {
+    background: var(--bg-card);
+    border-radius: 100px;
+    padding: 10px 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .summary-stat-pill .val {
+    font-weight: 700;
+    color: var(--accent-blue);
+  }
+
+  /* Footer */
+  .dashboard-footer {
+    text-align: center;
+    padding: 32px 40px;
+    color: var(--text-muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border-light);
+    margin-top: 20px;
+  }
+  .dashboard-footer strong {
+    color: var(--text-secondary);
+  }
+
+  /* Responsive */
+  @media (max-width: 1200px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .insights-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .chart-grid { grid-template-columns: 1fr; }
+    .container { padding: 20px; }
+    .dashboard-header { padding: 32px 20px; }
+    .header-title { font-size: 26px; }
+  }
+  @media (max-width: 600px) {
+    .kpi-grid { grid-template-columns: 1fr; }
+    .insights-grid { grid-template-columns: 1fr; }
+    .header-meta { flex-direction: column; gap: 8px; }
+  }
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>🚜 Machinery Impact Analysis Dashboard</h1>
-        <p>Comprehensive Insights on Machine Usage, Economic Growth, and Beneficiary Feedback</p>
-    </header>
+<!-- ===== HEADER ===== -->
+<header class="dashboard-header">
+  <div class="header-content">
+    <div class="header-badge">⚙️ Impact Assessment Report</div>
+    <h1 class="header-title">Machinery Impact Analysis Dashboard</h1>
+    <p class="header-subtitle">Comprehensive analysis of machinery distribution program — usage behavior, economic impact, productivity improvement & beneficiary feedback</p>
+    <div class="header-meta">
+      <span class="header-meta-item">📅 Survey Period: Oct 2025 – Feb 2026</span>
+      <span class="header-meta-item">📍 Pratapgarh District, Rajasthan</span>
+      <span class="header-meta-item">👥 29 Beneficiaries Surveyed</span>
+    </div>
+  </div>
+</header>
 
-    <!-- Insights Banner -->
-    <div class="insights-banner" id="insightsBanner">
-        <!-- Rendered via JS -->
+<div class="container">
+
+  <!-- ===== 1. EXECUTIVE SUMMARY ===== -->
+  <h2 class="section-title"><span class="emoji">📊</span> Executive Summary</h2>
+  <div class="section-divider"></div>
+
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi-card">
+      <div class="kpi-icon">👥</div>
+      <div class="kpi-value" id="kpiTotalBeneficiaries">–</div>
+      <div class="kpi-label">Total Beneficiaries</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">🏘️</div>
+      <div class="kpi-value" id="kpiVillages">–</div>
+      <div class="kpi-label">Villages Covered</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">🏠</div>
+      <div class="kpi-value" id="kpiHamlets">–</div>
+      <div class="kpi-label">Hamlets Covered</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">⚙️</div>
+      <div class="kpi-value" id="kpiMachineTypes">–</div>
+      <div class="kpi-label">Machine Types</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-value" id="kpiAdoption">–</div>
+      <div class="kpi-label">Using Machine</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📅</div>
+      <div class="kpi-value" id="kpiAvgDays">–</div>
+      <div class="kpi-label">Avg Usage Days / Month</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-value" id="kpiAvgSavings">–</div>
+      <div class="kpi-label">Avg Wage Savings / Month</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">📈</div>
+      <div class="kpi-value" id="kpiAvgIncome">–</div>
+      <div class="kpi-label">Avg Income Increase / Month</div>
+    </div>
+  </div>
+
+  <!-- ===== 2. SOCIAL CATEGORY DISTRIBUTION ===== -->
+  <h2 class="section-title"><span class="emoji">🏛️</span> Social Category & Caste Distribution</h2>
+  <div class="section-divider"></div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon blue">📊</div>
+        <div>
+          <div class="chart-title">Social Category Distribution</div>
+          <div class="chart-subtitle">SC / ST / OBC / General breakdown</div>
+        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartSocialCategory"></canvas>
+      </div>
     </div>
 
-    <!-- Executive Summary Grid -->
-    <div class="exec-grid" id="execSummaryGrid">
-        <!-- Rendered via JS -->
+    <!-- ===== 3. CASTE DISTRIBUTION ===== -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon purple">👥</div>
+        <div>
+          <div class="chart-title">Caste (Jati) Distribution</div>
+          <div class="chart-subtitle">Top caste groups among beneficiaries</div>
+        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartCaste"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 4. MACHINE TYPE DISTRIBUTION ===== -->
+  <h2 class="section-title"><span class="emoji">🔧</span> Machine Type & Adoption</h2>
+  <div class="section-divider"></div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon orange">⚙️</div>
+        <div>
+          <div class="chart-title">Machine Type Distribution</div>
+          <div class="chart-subtitle">Which machines are most distributed</div>
+        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartMachineType"></canvas>
+      </div>
     </div>
 
-    <!-- Charts Layout Section -->
-    <div class="charts-grid">
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>📊 Social Category Distribution</span>
-            </div>
-            <div class="chart-container"><canvas id="chartSocCat"></canvas></div>
+    <!-- ===== 5. MACHINE USAGE ADOPTION ===== -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon green">✅</div>
+        <div>
+          <div class="chart-title">Machine Usage (Adoption)</div>
+          <div class="chart-subtitle">Regular vs occasional usage pattern</div>
         </div>
-        
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>👥 Top Caste (Jati) Distribution</span>
-            </div>
-            <div class="chart-container"><canvas id="chartCaste"></canvas></div>
-        </div>
+      </div>
+      <div class="chart-container pie-chart">
+        <canvas id="chartUsageAdoption"></canvas>
+      </div>
+    </div>
+  </div>
 
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>⚙️ Machine Type Distributed</span>
-            </div>
-            <div class="chart-container"><canvas id="chartMachineType"></canvas></div>
-        </div>
+  <!-- ===== 6. USAGE FREQUENCY ===== -->
+  <h2 class="section-title"><span class="emoji">📅</span> Usage & Productivity Analysis</h2>
+  <div class="section-divider"></div>
 
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>✅ Machine Adoption (Usage)</span>
-            </div>
-            <div class="chart-container"><canvas id="chartUsagePie"></canvas></div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon teal">⏱️</div>
+        <div>
+          <div class="chart-title">Usage Frequency Analysis</div>
+          <div class="chart-subtitle">Days of machine usage per month</div>
         </div>
-
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>📅 Usage Frequency Analysis (Days/Month)</span>
-            </div>
-            <div class="chart-container"><canvas id="chartUsageFreq"></canvas></div>
-        </div>
-
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>💰 Wage Savings Distribution (₹)</span>    
-            </div>
-            <div class="chart-container"><canvas id="chartWageSavings"></canvas></div>
-        </div>
-
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>📈 Productivity Increase %</span>
-            </div>
-            <div class="chart-container"><canvas id="chartProdInc"></canvas></div>
-        </div>
-
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>💵 Income Increased Overview</span>
-            </div>
-            <div class="chart-container" style="display:flex; flex-direction:column; gap:10px;">
-                 <div style="flex:1;"><canvas id="chartIncStatus"></canvas></div>
-            </div>
-        </div>
-
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>⭐ Usefulness Rating</span>
-            </div>
-            <div class="chart-container"><canvas id="chartUsefulness"></canvas></div>
-        </div>
-
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>⚠️ Top Problems Reported</span>
-            </div>
-            <div class="chart-container"><canvas id="chartIssues"></canvas></div>
-        </div>
-
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>📍 Regional Impact: Top Villages by Income Grwth</span>
-            </div>
-            <div class="chart-container"><canvas id="chartTopVillages"></canvas></div>
-        </div>
-        
-        <div class="chart-card">
-            <div class="chart-header">
-                <span>📍 Regional Impact: Top Villages by Savings</span>
-            </div>
-            <div class="chart-container"><canvas id="chartTopVillagesSav"></canvas></div>
-        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartUsageFreq"></canvas>
+      </div>
     </div>
 
+    <!-- ===== 8. PRODUCTIVITY INCREASE ===== -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon green">📈</div>
+        <div>
+          <div class="chart-title">Productivity Increase</div>
+          <div class="chart-subtitle">Percentage productivity improvement reported</div>
+        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartProductivity"></canvas>
+      </div>
+    </div>
+  </div>
 
-    <!-- DYNAMIC DATA SCRIPT -->
-    <script>
-        // Register the DataLabels plugin
-        Chart.register(ChartDataLabels);
+  <!-- ===== 7. WAGE SAVINGS ===== -->
+  <h2 class="section-title"><span class="emoji">💰</span> Economic Impact Analysis</h2>
+  <div class="section-divider"></div>
 
-        // Global Chart Defaults
-        Chart.defaults.font.family = "'Inter', sans-serif";
-        Chart.defaults.color = '#475569';
-        Chart.defaults.plugins.tooltip.padding = 12;
-        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(15, 23, 42, 0.9)';
-        Chart.defaults.plugins.legend.position = 'bottom';
-        Chart.defaults.plugins.legend.labels.usePointStyle = true;
-        Chart.defaults.plugins.legend.labels.padding = 20;
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon orange">💵</div>
+        <div>
+          <div class="chart-title">Monthly Wage Savings Distribution</div>
+          <div class="chart-subtitle">Savings from reduced labor requirements</div>
+        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartWageSavings"></canvas>
+      </div>
+    </div>
 
-        // Configuration for Datalabels Plugin (to show values on bars and pies)
-        const dataLabelsConfig_Bar = {
-            display: true,
-            color: '#ffffff',
-            align: 'center',
-            anchor: 'center',
-            font: { weight: 'bold', size: 12 },
-            formatter: function(value, context) { return value > 0 ? value : ''; }
-        };
+    <!-- ===== 9. INCOME INCREASE (PIE) ===== -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon green">📈</div>
+        <div>
+          <div class="chart-title">Income Increase Status</div>
+          <div class="chart-subtitle">Beneficiaries reporting income increase</div>
+        </div>
+      </div>
+      <div class="chart-container pie-chart">
+        <canvas id="chartIncomeStatus"></canvas>
+      </div>
+    </div>
+  </div>
 
-        const dataLabelsConfig_Pie = {
-            display: true,
-            color: '#fff',
-            font: { weight: 'bold', size: 14 },
-            formatter: (value, ctx) => {
-                let sum = 0;
-                let dataArr = ctx.chart.data.datasets[0].data;
-                dataArr.map(data => { sum += data; });
-                if(value===0) return '';
-                let percentage = (value*100 / sum).toFixed(1)+"%";
-                return percentage;
-            },
-            textShadowColor: 'rgba(0,0,0,0.5)',
-            textShadowBlur: 4
-        };
+  <!-- Income Amount Distribution -->
+  <div class="chart-grid">
+    <div class="chart-card full-width">
+      <div class="chart-header">
+        <div class="chart-header-icon blue">💰</div>
+        <div>
+          <div class="chart-title">Monthly Income Increase Distribution (₹)</div>
+          <div class="chart-subtitle">Range of income increases reported per beneficiary (After − Before)</div>
+        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartIncomeAmount"></canvas>
+      </div>
+    </div>
+  </div>
 
+  <!-- ===== 10. USEFULNESS + 11. PROBLEMS ===== -->
+  <h2 class="section-title"><span class="emoji">⭐</span> Beneficiary Feedback</h2>
+  <div class="section-divider"></div>
 
-        // INJECTED DATA FROM PYTHON
-        const dashboardData = {"execSummary": {"total_beneficiaries": 29, "total_villages": 14, "total_hamlets": 17, "machine_types": 13, "pct_using": 100.0, "avg_usage_days": 0, "avg_wage_savings": 3234.0, "avg_income_inc": 3334.0}, "socCat": {"OBC": 22, "ST": 5, "SC": 2}, "casteDist": {"कालबेलिया": 13, "गाड़िया लोहार": 9, "भील": 5, "हरिजन": 1, "नायक": 1}, "machineDist": {"लकड़ी काटने की मशीन": 13, "इलेक्ट्रॉनिक ब्लोअर फैन": 3, "वेल्डिंग मशीन": 2, "वजन मापने की मशीन (100–500 किलोग्राम क्षमता)": 2, "लकड़ी मिस्त्री आरी (12, 18 इंच)": 1, "ग्राइंडर मशीन": 1, "तार जाली": 1, "ड्रिल मशीन": 1, "वेल्डिंग मशीन, ग्राइंडर मशीन, 3 एच.पी. मोटर": 1, "इलेक्ट्रॉनिक ब्लोअर फैन, ड्रिल मशीन": 1, "हथौड़ा (Hammer), घंटा / फोर्जिंग ब्लॉक, इलेक्ट्रॉनिक ब्लोअर फैन": 1, "इलेक्ट्रॉनिक ब्लोअर फैन, ग्राइंडर मशीन": 1, "हथौड़ा (Hammer), घंटा / फोर्जिंग ब्लॉक, ग्राइंडर मशीन": 1}, "usageDist": {"Yes": 29}, "freqDist": {}, "wageBins": {"1001-3000": 13, "3001-5000": 7, "5000+": 6, "1-1000": 3}, "prodBins": {"No increase": 29}, "incStatus": {"Yes": 29}, "usefulnessDist": {"Very Useful": 26, "Useful": 3}, "issueDist": {"No Issues": 27, "Other Issues": 1, "Machine Defect/Operation": 1}, "topVillagesInc": {"Shivnagar": 9000.0, "Kirap": 6000.0, "Dedpura": 5945.0, "Kushalpura": 4750.0, "Ruparel": 3500.0}, "topVillagesSav": {"Kushalpura": 6500.0, "Kirap": 6000.0, "Dedpura": 4833.0, "Shivnagar": 4500.0, "Ruparel": 3500.0}, "insights": {"most_used_machine": "लकड़ी काटने की मशीन", "highest_impact_village": "Shivnagar", "avg_savings": "₹3234", "adoption_rate": "100.0%", "problem_rate": "6.9%"}};
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon pink">⭐</div>
+        <div>
+          <div class="chart-title">Usefulness Rating</div>
+          <div class="chart-subtitle">How useful do beneficiaries find the machines</div>
+        </div>
+      </div>
+      <div class="chart-container pie-chart">
+        <canvas id="chartUsefulness"></canvas>
+      </div>
+    </div>
 
-        // Render Executive Summary
-        const execGrid = document.getElementById('execSummaryGrid');
-        const summaryData = [
-            { title: 'Total Beneficiaries', value: dashboardData.execSummary.total_beneficiaries, class: 'primary' },
-            { title: 'Villages Covered', value: dashboardData.execSummary.total_villages, class: 'success' },
-            { title: 'Hamlets Covered', value: dashboardData.execSummary.total_hamlets, class: 'warning' },
-            { title: 'Machine Types', value: dashboardData.execSummary.machine_types, class: 'primary' },
-            { title: '% Using Machine', value: dashboardData.execSummary.pct_using + '%', class: 'success' },
-            { title: 'Avg Usage (Days/Mo)', value: dashboardData.execSummary.avg_usage_days, class: 'primary' },
-            { title: 'Avg Wage Savings', value: '₹' + dashboardData.execSummary.avg_wage_savings, class: 'success' },
-            { title: 'Avg Income Increase', value: '₹' + dashboardData.execSummary.avg_income_inc, class: 'success' }
-        ];
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon red">⚠️</div>
+        <div>
+          <div class="chart-title">Problem Analysis</div>
+          <div class="chart-subtitle">Issues reported by beneficiaries</div>
+        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartProblems"></canvas>
+      </div>
+    </div>
+  </div>
 
-        summaryData.forEach(item => {
-            const card = document.createElement('div');
-            card.className = `stat-card ${item.class}`;
-            card.innerHTML = `<div class="stat-title">${item.title}</div><div class="stat-value">${item.value}</div>`;
-            execGrid.appendChild(card);
-        });
+  <!-- ===== 12. REGIONAL IMPACT ===== -->
+  <h2 class="section-title"><span class="emoji">🌍</span> Regional Impact Analysis</h2>
+  <div class="section-divider"></div>
 
-        // Render Insights Banner
-        const insightGrid = document.getElementById('insightsBanner');
-        const ins_data = dashboardData.insights;
-        const insightsHTML = `
-            <div class="insight-item"><div class="insight-icon">🏆</div><div class="insight-value">${ins_data.most_used_machine}</div><div class="insight-label">Most Used Machine</div></div>
-            <div class="insight-item"><div class="insight-icon">🌟</div><div class="insight-value">${ins_data.highest_impact_village}</div><div class="insight-label">Highest Impact Village</div></div>
-            <div class="insight-item"><div class="insight-icon">💰</div><div class="insight-value">${ins_data.avg_savings}</div><div class="insight-label">Avg Savings / Family</div></div>
-            <div class="insight-item"><div class="insight-icon">📈</div><div class="insight-value">${ins_data.adoption_rate}</div><div class="insight-label">Global Adoption Rate</div></div>
-            <div class="insight-item"><div class="insight-icon">⚠️</div><div class="insight-value">${ins_data.problem_rate}</div><div class="insight-label">Reported Problems</div></div>
-        `;
-        insightGrid.innerHTML = insightsHTML;
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon teal">🏘️</div>
+        <div>
+          <div class="chart-title">Village-wise Average Wage Savings (₹)</div>
+          <div class="chart-subtitle">Top villages by average monthly wage savings</div>
+        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartRegionSavings"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-header-icon purple">📈</div>
+        <div>
+          <div class="chart-title">Village-wise Average Income Growth (₹)</div>
+          <div class="chart-subtitle">Top villages by average monthly income increase</div>
+        </div>
+      </div>
+      <div class="chart-container bar-chart">
+        <canvas id="chartRegionIncome"></canvas>
+      </div>
+    </div>
+  </div>
 
-        // CHART COLORS
-        const colors = [
-            '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899',
-            '#0ea5e9', '#14b8a6', '#f43f5e', '#6366f1', '#84cc16'
-        ];
+  <!-- ===== INSIGHTS ===== -->
+  <h2 class="section-title"><span class="emoji">🧠</span> Key Insights</h2>
+  <div class="section-divider"></div>
 
-        // Helper to format Chart Data
-        function createChartData(dataObj, colorPalette=colors) {
-            return {
-                labels: Object.keys(dataObj),
-                datasets: [{
-                    data: Object.values(dataObj),
-                    backgroundColor: colorPalette,
-                    borderWidth: 0,
-                    borderRadius: 4
-                }]
-            };
-        }
+  <div class="insights-grid" id="insightsGrid">
+    <!-- filled by JS -->
+  </div>
 
-        // 1. Social Category Bar
-        new Chart(document.getElementById('chartSocCat'), {
-            type: 'bar',
-            data: createChartData(dashboardData.socCat, ['#3b82f6', '#f59e0b', '#10b981', '#8b5cf6']),
-            options: {
-                plugins: { legend: {display:false}, datalabels: dataLabelsConfig_Bar }
-            }
-        });
+  <!-- Footer -->
+  <footer class="dashboard-footer">
+    <p><strong>Machinery Impact Analysis Dashboard</strong> — Generated from beneficiary survey data</p>
+    <p style="margin-top:4px;">Data collected: April 2026 | Survey Period: Oct 2025 – Feb 2026 | Pratapgarh District, Rajasthan</p>
+  </footer>
 
-        // 2. Caste Horizontal Bar
-        new Chart(document.getElementById('chartCaste'), {
-            type: 'bar',
-            data: createChartData(dashboardData.casteDist, colors),
-            options: {
-                indexAxis: 'y',
-                plugins: { legend: {display:false}, datalabels: dataLabelsConfig_Bar }
-            }
-        });
+</div>
 
-        // 3. Machine Type
-        new Chart(document.getElementById('chartMachineType'), {
-            type: 'bar',
-            data: createChartData(dashboardData.machineDist, ['#0ea5e9', '#ec4899', '#8b5cf6', '#10b981']),
-            options: {
-                plugins: { legend: {display:false}, datalabels: dataLabelsConfig_Bar }
-            }
-        });
+<script>
+// ======== RAW DATA ========
+const rawData = [
+  { hamlet:"Meriya Mangari", village:"Dedpura", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Regular", days:"6–15", wageSavings:6000, prodIncrease:"50–75%", incomeBefore:10000, incomeAfter:22000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Meriya Mangari", village:"Dedpura", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Regular", days:"16–30", wageSavings:6000, prodIncrease:"50–75%", incomeBefore:1916, incomeAfter:5500, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Meriya Mangari", village:"Dedpura", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Occasional", days:"6–15", wageSavings:2500, prodIncrease:"25–50%", incomeBefore:750, incomeAfter:3000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Kesar Colony", village:"Kharwa", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Regular", days:"16–30", wageSavings:2800, prodIncrease:"50–75%", incomeBefore:950, incomeAfter:1600, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Kesar Colony", village:"Kharwa", category:"ST", caste:"Bhil", machine:"Wood Carpenter Saw", usage:"Occasional", days:"6–15", wageSavings:1600, prodIncrease:"25–50%", incomeBefore:2700, incomeAfter:3800, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Shivnagar", village:"Shivnagar", category:"ST", caste:"Bhil", machine:"Wood Cutting Machine", usage:"Regular", days:"6–15", wageSavings:4500, prodIncrease:"50–75%", incomeBefore:6000, incomeAfter:15000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"Maintenance" },
+  { hamlet:"Rebariyo ki dhani", village:"Shivpuri", category:"ST", caste:"Bhil", machine:"Grinder Machine", usage:"Occasional", days:"6–15", wageSavings:2000, prodIncrease:"25–50%", incomeBefore:4000, incomeAfter:6000, incomeIncreased:"Yes", usefulness:"Useful", problems:"No" },
+  { hamlet:"Shivpura", village:"Shivpuri", category:"OBC", caste:"Gadiya Lohar", machine:"Electronic Blower Fan", usage:"Regular", days:"16–30", wageSavings:4000, prodIncrease:"25–50%", incomeBefore:5000, incomeAfter:8000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Akrol", village:"Akrol", category:"OBC", caste:"Kalbelia", machine:"Wire Mesh (Tar Jali)", usage:"Regular", days:"16–30", wageSavings:800, prodIncrease:"25–50%", incomeBefore:1883, incomeAfter:2683, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Kelu", village:"Kelu", category:"OBC", caste:"Gadiya Lohar", machine:"Welding Machine", usage:"Regular", days:"16–30", wageSavings:3600, prodIncrease:"75–100%", incomeBefore:1083, incomeAfter:5800, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Bhil Mohla", village:"Kelu", category:"ST", caste:"Bhil", machine:"Drill Machine", usage:"Occasional", days:"6–15", wageSavings:1200, prodIncrease:"25–50%", incomeBefore:2600, incomeAfter:4600, incomeIncreased:"Yes", usefulness:"Useful", problems:"No" },
+  { hamlet:"Kushalpura", village:"Kushalpura", category:"OBC", caste:"Gadiya Lohar", machine:"Welding Machine", usage:"Regular", days:"6–15", wageSavings:7000, prodIncrease:"25–50%", incomeBefore:2500, incomeAfter:7000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"Machine running issue" },
+  { hamlet:"Kushalpura", village:"Kushalpura", category:"OBC", caste:"Gadiya Lohar", machine:"Electronic Blower Fan", usage:"Regular", days:"6–15", wageSavings:6000, prodIncrease:"25–50%", incomeBefore:3000, incomeAfter:8000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Kesar Colony", village:"Kharwa", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Regular", days:"16–30", wageSavings:3600, prodIncrease:"50–75%", incomeBefore:590, incomeAfter:4190, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Akrol", village:"Akrol", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Regular", days:"16–30", wageSavings:3500, prodIncrease:"50–75%", incomeBefore:2300, incomeAfter:5300, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Akrol", village:"Akrol", category:"OBC", caste:"Gadiya Lohar", machine:"Welding Machine, Grinder Machine, 3 HP Motor", usage:"Regular", days:"16–30", wageSavings:1500, prodIncrease:"50–75%", incomeBefore:1246, incomeAfter:3246, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Kesar Colony", village:"Kharwa", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Regular", days:"16–30", wageSavings:4000, prodIncrease:"50–75%", incomeBefore:3200, incomeAfter:7200, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Lohar Basti", village:"Piplaz", category:"OBC", caste:"Gadiya Lohar", machine:"Electronic Blower Fan, Drill Machine", usage:"Regular", days:"6–15", wageSavings:1500, prodIncrease:"25–50%", incomeBefore:2630, incomeAfter:4630, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Kesar Colony", village:"Kharwa", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Regular", days:"16–30", wageSavings:3000, prodIncrease:"50–75%", incomeBefore:2325, incomeAfter:5325, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Lohar Basti", village:"Piplaz", category:"OBC", caste:"Kalbelia", machine:"Electronic Blower Fan", usage:"Regular", days:"16–30", wageSavings:1000, prodIncrease:"25–50%", incomeBefore:2666, incomeAfter:4666, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Kirap", village:"Kirap", category:"ST", caste:"Bhil", machine:"Wood Cutting Machine", usage:"Regular", days:"6–15", wageSavings:6000, prodIncrease:"50–75%", incomeBefore:7000, incomeAfter:15000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Shyopura", village:"Shyopura", category:"OBC", caste:"Gadiya Lohar", machine:"Hammer, Forging Block, Electronic Blower Fan", usage:"Regular", days:"6–15", wageSavings:1000, prodIncrease:"50–75%", incomeBefore:3183, incomeAfter:4000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Andheri Devri", village:"Andvri", category:"SC", caste:"Harijan", machine:"Weighing Machine", usage:"Regular", days:"16–30", wageSavings:2000, prodIncrease:"50–75%", incomeBefore:1583, incomeAfter:3583, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Nadi Ruparel", village:"Ruparel", category:"SC", caste:"Nayak", machine:"Wood Cutting Machine", usage:"Regular", days:"16–30", wageSavings:3500, prodIncrease:"75–100%", incomeBefore:2100, incomeAfter:5600, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Kesar Colony", village:"Kharwa", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Regular", days:"16–30", wageSavings:3000, prodIncrease:"75–100%", incomeBefore:4850, incomeAfter:7850, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Kirap", village:"Kirap", category:"OBC", caste:"Gadiya Lohar", machine:"Electronic Blower Fan, Grinder Machine", usage:"Regular", days:"6–15", wageSavings:6000, prodIncrease:"50–75%", incomeBefore:3000, incomeAfter:7000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Surajpura II", village:"Surajpura II", category:"OBC", caste:"Kalbelia", machine:"Wood Cutting Machine", usage:"Regular", days:"16–30", wageSavings:3000, prodIncrease:"50–75%", incomeBefore:700, incomeAfter:3700, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Amarpura", village:"Surajpura II", category:"OBC", caste:"Gadiya Lohar", machine:"Hammer, Forging Block, Grinder Machine", usage:"Regular", days:"16–30", wageSavings:2000, prodIncrease:"50–75%", incomeBefore:1000, incomeAfter:2000, incomeIncreased:"Yes", usefulness:"Very Useful", problems:"No" },
+  { hamlet:"Devipura", village:"Devipura", category:"OBC", caste:"Kalbelia", machine:"Weighing Machine", usage:"Regular", days:"6–15", wageSavings:1200, prodIncrease:"25–50%", incomeBefore:833, incomeAfter:2000, incomeIncreased:"Yes", usefulness:"Useful", problems:"No" }
+];
 
-        // 4. Machine Usage Pie
-        new Chart(document.getElementById('chartUsagePie'), {
-            type: 'doughnut',
-            data: createChartData(dashboardData.usageDist, ['#10b981', '#ef4444']),
-            options: {
-                cutout: '50%',
-                plugins: { datalabels: dataLabelsConfig_Pie }
-            }
-        });
+// ======== HELPER FUNCTIONS ========
+function countBy(arr, key) {
+  const counts = {};
+  arr.forEach(d => {
+    const val = d[key] || 'Unknown';
+    counts[val] = (counts[val] || 0) + 1;
+  });
+  return counts;
+}
 
-        // 5. Usage Frequency
-        new Chart(document.getElementById('chartUsageFreq'), {
-            type: 'bar',
-            data: createChartData(dashboardData.freqDist, ['#93c5fd', '#3b82f6', '#1e3a8a']),
-            options: {
-                plugins: { legend: {display:false}, datalabels: dataLabelsConfig_Bar }
-            }
-        });
+function avg(arr) {
+  const valid = arr.filter(v => v != null && !isNaN(v));
+  if (valid.length === 0) return 0;
+  return valid.reduce((a, b) => a + b, 0) / valid.length;
+}
 
-        // 6. Wage Savings Distribution
-        new Chart(document.getElementById('chartWageSavings'), {
-            type: 'bar',
-            data: createChartData(dashboardData.wageBins, ['#fca5a5', '#fcd34d', '#86efac', '#34d399', '#059669']),
-            options: {
-                plugins: { legend: {display:false}, datalabels: dataLabelsConfig_Bar }
-            }
-        });
+function uniqueCount(arr, key) {
+  return new Set(arr.map(d => d[key]).filter(Boolean)).size;
+}
 
-        // 7. Productivity Increase
-        new Chart(document.getElementById('chartProdInc'), {
-            type: 'bar',
-            data: createChartData(dashboardData.prodBins, ['#cbd5e1', '#93c5fd', '#3b82f6', '#1d4ed8']),
-            options: {
-                plugins: { legend: {display:false}, datalabels: dataLabelsConfig_Bar }
-            }
-        });
+function formatCurrency(val) {
+  return '₹' + Math.round(val).toLocaleString('en-IN');
+}
 
-        // 8. Income Increase Status (Pie layout)
-        new Chart(document.getElementById('chartIncStatus'), {
-            type: 'pie',
-            data: createChartData(dashboardData.incStatus, ['#8b5cf6', '#a78bfa']),
-            options: {
-                plugins: { datalabels: dataLabelsConfig_Pie }
-            }
-        });
+// ======== CHART DEFAULTS ========
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#4a5568';
+Chart.defaults.plugins.legend.display = false;
+Chart.defaults.animation.duration = 800;
 
-        // 9. Usefulness
-        new Chart(document.getElementById('chartUsefulness'), {
-            type: 'pie',
-            data: createChartData(dashboardData.usefulnessDist, ['#10b981', '#34d399', '#fcd34d', '#ef4444']),
-            options: {
-                plugins: { datalabels: dataLabelsConfig_Pie }
-            }
-        });
+const COLORS = {
+  blue: ['#3182ce','#63b3ed','#bee3f8'],
+  green: ['#38a169','#68d391','#c6f6d5'],
+  purple: ['#805ad5','#b794f4','#e9d8fd'],
+  orange: ['#dd6b20','#f6ad55','#feebc8'],
+  teal: ['#319795','#4fd1c5','#b2f5ea'],
+  pink: ['#d53f8c','#f687b3','#fed7e2'],
+  palette: ['#3182ce','#38a169','#805ad5','#dd6b20','#319795','#d53f8c','#e53e3e','#d69e2e','#667eea','#48bb78','#ed8936','#9f7aea']
+};
 
-        // 10. Issues
-        new Chart(document.getElementById('chartIssues'), {
-            type: 'bar',
-            data: createChartData(dashboardData.issueDist, ['#ef4444', '#f87171', '#fca5a5', '#fee2e2']),
-            options: {
-                indexAxis: 'y',
-                plugins: { legend: {display:false}, datalabels: { ...dataLabelsConfig_Bar, color: '#333' } }
-            }
-        });
+function barGradient(ctx, colorStart, colorEnd) {
+  const g = ctx.chart.ctx.createLinearGradient(0, ctx.chart.chartArea?.bottom || 300, 0, ctx.chart.chartArea?.top || 0);
+  g.addColorStop(0, colorStart);
+  g.addColorStop(1, colorEnd);
+  return g;
+}
 
-        // 11. Top Villages Income
-        new Chart(document.getElementById('chartTopVillages'), {
-            type: 'bar',
-            data: createChartData(dashboardData.topVillagesInc, colors),
-            options: {
-                plugins: { legend: {display:false}, datalabels: dataLabelsConfig_Bar }
-            }
-        });
+// ======== DATA PROCESSING ========
+const totalBeneficiaries = rawData.length;
+const totalVillages = uniqueCount(rawData, 'village');
+const totalHamlets = uniqueCount(rawData, 'hamlet');
 
-        // 12. Top Villages Savings
-        new Chart(document.getElementById('chartTopVillagesSav'), {
-            type: 'bar',
-            data: createChartData(dashboardData.topVillagesSav, colors),
-            options: {
-                plugins: { legend: {display:false}, datalabels: dataLabelsConfig_Bar }
-            }
-        });
+// Machine types (primary - first machine listed)
+const allMachineTypes = new Set();
+rawData.forEach(d => {
+  const parts = d.machine.split(',').map(s => s.trim());
+  parts.forEach(p => allMachineTypes.add(p));
+});
 
-    </script>
+const usingMachine = rawData.filter(d => d.usage === 'Regular' || d.usage === 'Occasional').length;
+const adoptionRate = ((usingMachine / totalBeneficiaries) * 100).toFixed(1);
+
+// Usage days mapping
+function getDaysMidpoint(days) {
+  if (days.includes('1–5')) return 3;
+  if (days.includes('6–15')) return 10.5;
+  if (days.includes('16–30')) return 23;
+  return 0;
+}
+
+const avgDays = avg(rawData.map(d => getDaysMidpoint(d.days)));
+const avgSavings = avg(rawData.map(d => d.wageSavings).filter(v => v > 0));
+const incomeIncreases = rawData.map(d => (d.incomeAfter || 0) - (d.incomeBefore || 0)).filter(v => v > 0);
+const avgIncomeIncrease = avg(incomeIncreases);
+
+// ======== POPULATE KPIs ========
+document.getElementById('kpiTotalBeneficiaries').textContent = totalBeneficiaries;
+document.getElementById('kpiVillages').textContent = totalVillages;
+document.getElementById('kpiHamlets').textContent = totalHamlets;
+document.getElementById('kpiMachineTypes').textContent = allMachineTypes.size;
+document.getElementById('kpiAdoption').textContent = adoptionRate + '%';
+document.getElementById('kpiAvgDays').textContent = avgDays.toFixed(1);
+document.getElementById('kpiAvgSavings').textContent = formatCurrency(avgSavings);
+document.getElementById('kpiAvgIncome').textContent = formatCurrency(avgIncomeIncrease);
+
+// ======== CHART 1: SOCIAL CATEGORY ========
+const socialCats = countBy(rawData, 'category');
+const socialLabels = Object.keys(socialCats).sort((a,b) => socialCats[b] - socialCats[a]);
+const socialValues = socialLabels.map(k => socialCats[k]);
+const socialColors = ['#3182ce','#38a169','#805ad5','#dd6b20'];
+
+new Chart(document.getElementById('chartSocialCategory'), {
+  type: 'bar',
+  data: {
+    labels: socialLabels,
+    datasets: [{
+      data: socialValues,
+      backgroundColor: socialColors.slice(0, socialLabels.length),
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 60
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { stepSize: 5 } },
+      x: { grid: { display: false } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'top', color: '#1a202c',
+        font: { weight: '700', size: 14 },
+        formatter: v => v
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 2: CASTE DISTRIBUTION ========
+const casteCounts = countBy(rawData, 'caste');
+const casteLabels = Object.keys(casteCounts).sort((a,b) => casteCounts[b] - casteCounts[a]);
+const casteValues = casteLabels.map(k => casteCounts[k]);
+const casteColors = COLORS.palette.slice(0, casteLabels.length);
+
+new Chart(document.getElementById('chartCaste'), {
+  type: 'bar',
+  data: {
+    labels: casteLabels,
+    datasets: [{
+      data: casteValues,
+      backgroundColor: casteColors,
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 50
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { stepSize: 5 } },
+      y: { grid: { display: false } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'right', color: '#1a202c',
+        font: { weight: '700', size: 14 },
+        formatter: v => v
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 3: MACHINE TYPE DISTRIBUTION ========
+const machineCounts = {};
+rawData.forEach(d => {
+  // Take first/primary machine from comma-separated list
+  const primary = d.machine.split(',')[0].trim();
+  machineCounts[primary] = (machineCounts[primary] || 0) + 1;
+});
+const machineLabels = Object.keys(machineCounts).sort((a,b) => machineCounts[b] - machineCounts[a]);
+const machineValues = machineLabels.map(k => machineCounts[k]);
+
+new Chart(document.getElementById('chartMachineType'), {
+  type: 'bar',
+  data: {
+    labels: machineLabels,
+    datasets: [{
+      data: machineValues,
+      backgroundColor: COLORS.palette.slice(0, machineLabels.length),
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 50
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { beginAtZero: true, grid: { color: '#f0f0f0' } },
+      y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'right', color: '#1a202c',
+        font: { weight: '700', size: 13 },
+        formatter: v => v
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 4: USAGE ADOPTION PIE ========
+const usageCounts = countBy(rawData, 'usage');
+new Chart(document.getElementById('chartUsageAdoption'), {
+  type: 'doughnut',
+  data: {
+    labels: Object.keys(usageCounts),
+    datasets: [{
+      data: Object.values(usageCounts),
+      backgroundColor: ['#38a169','#f6ad55'],
+      borderWidth: 3,
+      borderColor: '#fff',
+      hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 13, weight: '500' } } },
+      datalabels: {
+        color: '#fff',
+        font: { weight: '700', size: 15 },
+        formatter: (v, ctx) => {
+          const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+          return Math.round(v/total*100) + '%\n(' + v + ')';
+        },
+        textAlign: 'center'
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 5: USAGE FREQUENCY ========
+const freqCounts = { '1–5 days': 0, '6–15 days': 0, '16–30 days': 0 };
+rawData.forEach(d => {
+  if (d.days.includes('1–5')) freqCounts['1–5 days']++;
+  else if (d.days.includes('6–15')) freqCounts['6–15 days']++;
+  else if (d.days.includes('16–30')) freqCounts['16–30 days']++;
+});
+
+new Chart(document.getElementById('chartUsageFreq'), {
+  type: 'bar',
+  data: {
+    labels: Object.keys(freqCounts),
+    datasets: [{
+      data: Object.values(freqCounts),
+      backgroundColor: ['#f6ad55','#4fd1c5','#3182ce'],
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 70
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { stepSize: 5 } },
+      x: { grid: { display: false } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'top', color: '#1a202c',
+        font: { weight: '700', size: 14 },
+        formatter: v => v
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 6: PRODUCTIVITY INCREASE ========
+const prodCounts = { 'No Increase': 0, '1–25%': 0, '25–50%': 0, '50–75%': 0, '75–100%': 0 };
+rawData.forEach(d => {
+  const p = d.prodIncrease;
+  if (!p || p === '0' || p === 'No') prodCounts['No Increase']++;
+  else if (p.includes('1–25') || p.includes('0–25')) prodCounts['1–25%']++;
+  else if (p.includes('25–50')) prodCounts['25–50%']++;
+  else if (p.includes('50–75')) prodCounts['50–75%']++;
+  else if (p.includes('75–100')) prodCounts['75–100%']++;
+});
+
+new Chart(document.getElementById('chartProductivity'), {
+  type: 'bar',
+  data: {
+    labels: Object.keys(prodCounts),
+    datasets: [{
+      data: Object.values(prodCounts),
+      backgroundColor: ['#e2e8f0','#fed7d7','#feebc8','#c6f6d5','#38a169'],
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 60
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { stepSize: 5 } },
+      x: { grid: { display: false } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'top', color: '#1a202c',
+        font: { weight: '700', size: 14 },
+        formatter: v => v
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 7: WAGE SAVINGS DISTRIBUTION ========
+const savingsBuckets = { '₹0–1000': 0, '₹1001–2000': 0, '₹2001–3000': 0, '₹3001–4000': 0, '₹4001–5000': 0, '₹5000+': 0 };
+rawData.forEach(d => {
+  const s = d.wageSavings;
+  if (s <= 1000) savingsBuckets['₹0–1000']++;
+  else if (s <= 2000) savingsBuckets['₹1001–2000']++;
+  else if (s <= 3000) savingsBuckets['₹2001–3000']++;
+  else if (s <= 4000) savingsBuckets['₹3001–4000']++;
+  else if (s <= 5000) savingsBuckets['₹4001–5000']++;
+  else savingsBuckets['₹5000+']++;
+});
+
+new Chart(document.getElementById('chartWageSavings'), {
+  type: 'bar',
+  data: {
+    labels: Object.keys(savingsBuckets),
+    datasets: [{
+      data: Object.values(savingsBuckets),
+      backgroundColor: ['#bee3f8','#90cdf4','#63b3ed','#4299e1','#3182ce','#2b6cb0'],
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 55
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { stepSize: 2 } },
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'top', color: '#1a202c',
+        font: { weight: '700', size: 14 },
+        formatter: v => v
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 8: INCOME STATUS PIE ========
+const incomeStatusCounts = countBy(rawData, 'incomeIncreased');
+new Chart(document.getElementById('chartIncomeStatus'), {
+  type: 'doughnut',
+  data: {
+    labels: Object.keys(incomeStatusCounts).map(k => k === 'Yes' ? 'Income Increased' : 'No Increase'),
+    datasets: [{
+      data: Object.values(incomeStatusCounts),
+      backgroundColor: ['#38a169','#e53e3e'],
+      borderWidth: 3,
+      borderColor: '#fff',
+      hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 13, weight: '500' } } },
+      datalabels: {
+        color: '#fff',
+        font: { weight: '700', size: 15 },
+        formatter: (v, ctx) => {
+          const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+          return Math.round(v/total*100) + '%\n(' + v + ')';
+        },
+        textAlign: 'center'
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 9: INCOME AMOUNT DISTRIBUTION ========
+const incomeBuckets = { '₹0–1000': 0, '₹1001–2000': 0, '₹2001–3000': 0, '₹3001–5000': 0, '₹5001–8000': 0, '₹8000+': 0 };
+rawData.forEach(d => {
+  const inc = (d.incomeAfter || 0) - (d.incomeBefore || 0);
+  if (inc <= 1000) incomeBuckets['₹0–1000']++;
+  else if (inc <= 2000) incomeBuckets['₹1001–2000']++;
+  else if (inc <= 3000) incomeBuckets['₹2001–3000']++;
+  else if (inc <= 5000) incomeBuckets['₹3001–5000']++;
+  else if (inc <= 8000) incomeBuckets['₹5001–8000']++;
+  else incomeBuckets['₹8000+']++;
+});
+
+new Chart(document.getElementById('chartIncomeAmount'), {
+  type: 'bar',
+  data: {
+    labels: Object.keys(incomeBuckets),
+    datasets: [{
+      label: 'Beneficiaries',
+      data: Object.values(incomeBuckets),
+      backgroundColor: ['#c6f6d5','#9ae6b4','#68d391','#48bb78','#38a169','#2f855a'],
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 70
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { stepSize: 2 } },
+      x: { grid: { display: false } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'top', color: '#1a202c',
+        font: { weight: '700', size: 14 },
+        formatter: v => v
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 10: USEFULNESS PIE ========
+const usefulCounts = countBy(rawData, 'usefulness');
+const usefulLabels = Object.keys(usefulCounts);
+const usefulColors = ['#38a169','#4fd1c5','#f6ad55','#e53e3e'];
+
+new Chart(document.getElementById('chartUsefulness'), {
+  type: 'doughnut',
+  data: {
+    labels: usefulLabels,
+    datasets: [{
+      data: usefulLabels.map(k => usefulCounts[k]),
+      backgroundColor: usefulColors.slice(0, usefulLabels.length),
+      borderWidth: 3,
+      borderColor: '#fff',
+      hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 13, weight: '500' } } },
+      datalabels: {
+        color: '#fff',
+        font: { weight: '700', size: 14 },
+        formatter: (v, ctx) => {
+          const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+          return Math.round(v/total*100) + '%\n(' + v + ')';
+        },
+        textAlign: 'center'
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 11: PROBLEM ANALYSIS ========
+const problemCounts = {};
+rawData.forEach(d => {
+  const p = d.problems.trim();
+  if (p && p !== 'No' && p !== 'None' && p !== 'नहीं' && p.toLowerCase() !== 'no') {
+    problemCounts[p] = (problemCounts[p] || 0) + 1;
+  }
+});
+// Add "No Issues" count
+const noIssueCount = rawData.length - Object.values(problemCounts).reduce((a,b)=>a+b, 0);
+const problemLabels = ['No Issues Reported', ...Object.keys(problemCounts)];
+const problemValues = [noIssueCount, ...Object.values(problemCounts)];
+const problemColors = ['#38a169', '#e53e3e', '#dd6b20', '#d53f8c', '#805ad5'];
+
+new Chart(document.getElementById('chartProblems'), {
+  type: 'bar',
+  data: {
+    labels: problemLabels,
+    datasets: [{
+      data: problemValues,
+      backgroundColor: problemColors.slice(0, problemLabels.length),
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 60
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { beginAtZero: true, grid: { color: '#f0f0f0' } },
+      y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'right', color: '#1a202c',
+        font: { weight: '700', size: 14 },
+        formatter: v => v
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== CHART 12: REGIONAL IMPACT ========
+// Village-wise average savings
+const villageSavings = {};
+const villageSavingsCount = {};
+rawData.forEach(d => {
+  const v = d.village;
+  villageSavings[v] = (villageSavings[v] || 0) + d.wageSavings;
+  villageSavingsCount[v] = (villageSavingsCount[v] || 0) + 1;
+});
+const villageAvgSavings = {};
+Object.keys(villageSavings).forEach(v => {
+  villageAvgSavings[v] = Math.round(villageSavings[v] / villageSavingsCount[v]);
+});
+const savingsVillagesSorted = Object.keys(villageAvgSavings).sort((a,b) => villageAvgSavings[b] - villageAvgSavings[a]);
+
+new Chart(document.getElementById('chartRegionSavings'), {
+  type: 'bar',
+  data: {
+    labels: savingsVillagesSorted,
+    datasets: [{
+      data: savingsVillagesSorted.map(v => villageAvgSavings[v]),
+      backgroundColor: COLORS.palette.slice(0, savingsVillagesSorted.length),
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 45
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { callback: v => '₹' + v.toLocaleString('en-IN') } },
+      x: { grid: { display: false }, ticks: { font: { size: 11 }, maxRotation: 45 } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'top', color: '#1a202c',
+        font: { weight: '700', size: 11 },
+        formatter: v => '₹' + v.toLocaleString('en-IN')
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// Village-wise average income growth
+const villageIncome = {};
+const villageIncomeCount = {};
+rawData.forEach(d => {
+  const v = d.village;
+  const inc = (d.incomeAfter || 0) - (d.incomeBefore || 0);
+  villageIncome[v] = (villageIncome[v] || 0) + inc;
+  villageIncomeCount[v] = (villageIncomeCount[v] || 0) + 1;
+});
+const villageAvgIncome = {};
+Object.keys(villageIncome).forEach(v => {
+  villageAvgIncome[v] = Math.round(villageIncome[v] / villageIncomeCount[v]);
+});
+const incomeVillagesSorted = Object.keys(villageAvgIncome).sort((a,b) => villageAvgIncome[b] - villageAvgIncome[a]);
+
+new Chart(document.getElementById('chartRegionIncome'), {
+  type: 'bar',
+  data: {
+    labels: incomeVillagesSorted,
+    datasets: [{
+      data: incomeVillagesSorted.map(v => villageAvgIncome[v]),
+      backgroundColor: COLORS.palette.slice(0, incomeVillagesSorted.length),
+      borderRadius: 8,
+      borderSkipped: false,
+      maxBarThickness: 45
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { beginAtZero: true, grid: { color: '#f0f0f0' }, ticks: { callback: v => '₹' + v.toLocaleString('en-IN') } },
+      x: { grid: { display: false }, ticks: { font: { size: 11 }, maxRotation: 45 } }
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end', align: 'top', color: '#1a202c',
+        font: { weight: '700', size: 11 },
+        formatter: v => '₹' + v.toLocaleString('en-IN')
+      }
+    }
+  },
+  plugins: [ChartDataLabels]
+});
+
+// ======== INSIGHTS ========
+// Most used machine
+const mostUsedMachine = machineLabels[0];
+const mostUsedMachineCount = machineValues[0];
+
+// Highest impact village (by income growth)
+const highImpactVillage = incomeVillagesSorted[0];
+const highImpactVillageVal = villageAvgIncome[highImpactVillage];
+
+// Problems %
+const problemReporters = rawData.filter(d => {
+  const p = d.problems.trim();
+  return p && p !== 'No' && p !== 'None' && p !== 'नहीं' && p.toLowerCase() !== 'no';
+}).length;
+const problemPercent = ((problemReporters / totalBeneficiaries) * 100).toFixed(1);
+
+// Avg productivity midpoint
+function prodMidpoint(p) {
+  if (p.includes('25–50')) return 37.5;
+  if (p.includes('50–75')) return 62.5;
+  if (p.includes('75–100')) return 87.5;
+  if (p.includes('1–25')) return 12.5;
+  return 0;
+}
+const avgProd = avg(rawData.map(d => prodMidpoint(d.prodIncrease)));
+
+const insightsData = [
+  { icon: '⚙️', title: 'Most Used Machine', value: mostUsedMachine, desc: `${mostUsedMachineCount} out of ${totalBeneficiaries} beneficiaries received this` },
+  { icon: '🏆', title: 'Highest Impact Village', value: highImpactVillage, desc: `Average income growth of ${formatCurrency(highImpactVillageVal)}/month` },
+  { icon: '💰', title: 'Avg Savings Per Family', value: formatCurrency(avgSavings), desc: 'Monthly wage savings from reduced labor needs' },
+  { icon: '✅', title: 'Adoption Rate', value: adoptionRate + '%', desc: `All ${totalBeneficiaries} beneficiaries actively use their machines` },
+  { icon: '📈', title: 'Avg Productivity Growth', value: avgProd.toFixed(1) + '%', desc: 'Average productivity improvement reported' },
+  { icon: '⚠️', title: 'Problems Reported', value: problemPercent + '%', desc: `${problemReporters} out of ${totalBeneficiaries} reported issues` }
+];
+
+const insightsGrid = document.getElementById('insightsGrid');
+insightsData.forEach(item => {
+  const card = document.createElement('div');
+  card.className = 'insight-card';
+  card.innerHTML = `
+    <div class="insight-icon">${item.icon}</div>
+    <div class="insight-title">${item.title}</div>
+    <div class="insight-value">${item.value}</div>
+    <div class="insight-desc">${item.desc}</div>
+  `;
+  insightsGrid.appendChild(card);
+});
+</script>
 </body>
 </html>
-```
